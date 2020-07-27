@@ -1,0 +1,53 @@
+.loginBackground {
+    border-radius: 30px;
+    border: solid 1px green;
+    width: 600px;
+    height: 130px;
+    background-image: url("../img/bg2.png");
+    position: relative;
+    margin: auto;
+    top: 200px;
+}
+
+.login {
+    position: absolute;
+    top: 40px;
+    left: 50px;
+}
+
+
+.login .button{
+    background-color: #4CAF50;
+    color: white;
+    display: inline-block;
+    float: left;
+    font-size: 16px;
+    margin: auto;
+    padding: 10px;
+}
+
+.button:hover{
+    opacity: 0.5;
+}
+
+
+body {
+    background-color: #ffffff;
+    background-image: url("../img/bg2.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+
+}
+
+.field {
+    display: inline-block;
+    width: 200px;
+    float: left;
+    position: relative;
+}
+
+.nullFiled {
+    position: absolute;
+    border: red 2px solid;
+}
