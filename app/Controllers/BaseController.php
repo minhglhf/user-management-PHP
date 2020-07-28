@@ -67,5 +67,25 @@ class BaseController
         require_once('./app/views/' . $this->getCurrentControllerName() . '/' . $filename . '.php');
     }
 
+    public function role(){
+        if ($_SESSION['role'] == "3") {
+            if($this->getCurrentActionName() == 'showUser' || $this->getCurrentActionName() == 'update' ||
+            $this->getCurrentActionName() == 'search') return 1;
+            return 0;
+        }
+        if ($_SESSION['role'] == "2" || $_SESSION['role'] == "1") {
+            return 1;
+        }
+        return 1;
+    }
+
+    public function deniedAccess(){
+           if($this->role() == '0'){
+               echo "Access Denien - Not your role! <br>";
+               echo "<a href = \" ../user/index\" ><input type = \"submit\" name = \"backToHomePage\" value = \"back to home pager\" ></a >";
+               die;
+           }
+
+    }
 
 }

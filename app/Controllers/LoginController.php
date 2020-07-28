@@ -19,6 +19,7 @@ class LoginController extends BaseController
             if ($user) {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['password'] = $user['password'];
+                $_SESSION['role'] = $user['permission_access'];
                 return header("location: ../user/index");
             }
         }

@@ -1,6 +1,6 @@
 <?php
 include "./app/Configs/configs.php";
-include "./app/Common/CommonFuntion.php";
+include "./app/Common/CommonFunction.php";
 
 class ConnDatabase
 {

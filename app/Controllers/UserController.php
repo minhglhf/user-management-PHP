@@ -3,7 +3,6 @@
 class UserController extends BaseController
 {
 
-
     public function index()
     {
         $this->renderView();
@@ -13,6 +12,27 @@ class UserController extends BaseController
     {
         $rowlistUser = $this->getModel()->getList("0");
         $this->renderView("showUser", ['list' => $rowlistUser]);
+    }
+
+
+    public function create()
+    {
+        $this->deniedAccess();
+        $data = $this->checkDataFromInfo();
+        if (!empty($data)) {
+            $x = $this->getModel()->setData($data);
+        }
+    }
+
+
+    public function search()
+    {
+        $this->deniedAccess();
+        $data = $this->checkDataFromInfo();
+        if (!empty($data)) {
+            $x = $this->getModel()->searchData($data);
+            $this->renderView("showUser", ['list' => $x]);
+        }
     }
 
     public function checkDataFromInfo()
@@ -33,37 +53,15 @@ class UserController extends BaseController
         return 0;
     }
 
-    public function create()
-    {
-        $data = $this->checkDataFromInfo();
-        if (!empty($data)) {
-            $x = $this->getModel()->setData($data);
-        }
-    }
-
-
-    public function search()
-    {
-        $data = $this->checkDataFromInfo();
-        if (!empty($data)) {
-            $x = $this->getModel()->searchData($data);
-            $this->renderView("showUser", ['list' => $x]);
-        }
-
-    }
-
     public function accessData()
     {
         $selectData = "";
-        $data = $this->checkDataFromInfo();
-        if (!empty($data)) {
-            $x = $this->getModel()->searchData($data);
-            $this->renderView("accessUser", ['list' => $x]);
-        }
-        if (isset($_POST['select'])) {
+        $x = $this->getModel()->getList("0");
+        $this->renderView("accessUser", ['list' => $x]);
+
+        if (isset($_POST['selectUser'])) {
             if (isset($_POST['userSelected'])) {
                 $selectData = $_POST['userSelected'];
-
             }
         }
         return $selectData;
@@ -71,6 +69,7 @@ class UserController extends BaseController
 
     public function delete()
     {
+        $this->deniedAccess();
         $x = null;
         $x = $this->accessData();
         if ($x != null) {
@@ -80,14 +79,21 @@ class UserController extends BaseController
 
     public function update()
     {
-        $data = [];
-        $x = null;
-        $x = $this->accessData();
-        if ($x != null) {
-            $y = $this->getModel()->getRecordInfo($x);
+        if ($_SESSION['role'] == '3' || isset($_POST['updateMyData'])) {
+            $y = $this->getModel()->getRecordInfo('', '0');
             $this->renderView("updateUser", ['list' => $y]);
+        } else if ($_SESSION['role'] == '1' || $_SESSION['role'] == '2') {
+            $this->deniedAccess();
+            $data = [];
+            $x = null;
+            $x = $this->accessData();
+            if ($x != null) {
+                $y = $this->getModel()->getRecordInfo($x, '0');
+                $this->renderView("updateUser", ['list' => $y]);
+            }
         }
-        if(isset($_POST['updateData'])){
+
+        if (isset($_POST['updateData'])) {
             $data = array(
                 'id' => $_POST['value0'],
                 'permission_access' => $_POST['value1'],
@@ -100,23 +106,22 @@ class UserController extends BaseController
             );
             $this->getModel()->updateData($data);
         }
-
     }
 
 
     public function restore()
     {
+        $this->deniedAccess();
         echo "<h2>delete lists</h2>";
         $list = $this->getModel()->getList("1");
         $this->renderView("accessUser", ['list' => $list]);
-        if (isset($_POST['select'])) {
+        if (isset($_POST['selectUser'])) {
             if (isset($_POST['userSelected'])) {
                 $selectData = $_POST['userSelected'];
                 $this->getModel()->restoreData($selectData);
             }
         }
     }
-
 
 }
 
