@@ -5,11 +5,22 @@ class BaseController
     protected $_controllerName = null;
     protected $_action = null;
     protected $_model = null;
+    protected $_keyErrors = null ;
 
     public function __construct()
     {
         $userModel = $this->loadModel("UserModel");
         $this->setModel($userModel);
+    }
+
+    public function setKeyErrors($keyError)
+    {
+        $this->_keyErrors = $keyError;
+    }
+
+    public function getKeyErrors()
+    {
+        return $this->_keyErrors;
     }
 
     public function setModel($model)
@@ -21,6 +32,7 @@ class BaseController
     {
         return $this->_model;
     }
+
 
     public function setCurrentController($controller)
     {
@@ -50,27 +62,35 @@ class BaseController
     }
 
 
+
     public function isLoggedIn()
     {
-        if (!isset($_SESSION['email']) || !isset($_SESSION['password'])) {
+        if (!isset($_SESSION['login'])) {
             return false;
         }
         return true;
     }
+
+
 
     public function renderView($filename = null, $data = [])
     {
         if (empty($filename)) {
             $filename = $this->getCurrentActionName();
         }
+       // if($data != null)
+        if(!empty($data))
         extract($data);
+
         require_once('./app/views/' . $this->getCurrentControllerName() . '/' . $filename . '.php');
     }
 
-    public function role(){
+    public function getActionRole()
+    {
         if ($_SESSION['role'] == "3") {
-            if($this->getCurrentActionName() == 'showUser' || $this->getCurrentActionName() == 'update' ||
-            $this->getCurrentActionName() == 'search') return 1;
+            if ($this->getCurrentActionName() == 'showUser' ||
+                $this->getCurrentActionName() == 'update' ||
+                $this->getCurrentActionName() == 'search') return 1;
             return 0;
         }
         if ($_SESSION['role'] == "2" || $_SESSION['role'] == "1") {
@@ -79,13 +99,32 @@ class BaseController
         return 1;
     }
 
-    public function deniedAccess(){
-           if($this->role() == '0'){
-               echo "Access Denien - Not your role! <br>";
-               echo "<a href = \" ../user/index\" ><input type = \"submit\" name = \"backToHomePage\" value = \"back to home pager\" ></a >";
-               die;
-           }
+    public function checkRole()
+    {
+        if ($this->getActionRole() == '0') {
+            echo "Access Denien - Not your role! <br>";
+            echo "<a href = \" ../user/index\" ><input type = \"submit\" name = \"backToHomePage\" value = \"back to home pager\" ></a >";
+        }
+    }
 
+    public function redirect($url)
+    {
+        return header("location:../{$url}");
+    }
+
+    public function setSession($key, $value)
+    {
+        $_SESSION[$key] = $value;
+    }
+
+    public function deleteSession($key)
+    {
+        unset($_SESSION[$key]);
+    }
+
+    public function deleteError(){
+        if($this->getCurrentActionName() != 'create') $this->deleteSession('error');
+        if($this->getCurrentActionName() != 'login') $this->deleteSession('error');
     }
 
 }

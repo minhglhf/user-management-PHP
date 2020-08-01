@@ -1,6 +1,4 @@
 <form method="post" ">
-
-<input type="submit" value="updateMyData" name="updateMyData">
 <?php if (isset($list)) : ?>
     <?php if (empty($list)): ?>
         <h1> No Results Found!!!</h1>
@@ -19,7 +17,7 @@
                 <td><?php echo $user['id'] ?></td>
                 <td><?php echo $user['name'] ?></td>
                 <td><?php echo $user['email'] ?></td>
-                <td><?php echo $user['permission_access'] ?></td>
+                <td><?php echo $user['role'] ?></td>
                 <td><input type="radio" name= "userSelected" value=<?php echo $user['id'] ?>></td>
             </tr>
         <?php endforeach; ?>
