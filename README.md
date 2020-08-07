@@ -1,4 +1,4 @@
-# user-management-PHP
+# user-management-PHP (No framework)
 -  Admin
 	- Login/Logout
 	- CURD
