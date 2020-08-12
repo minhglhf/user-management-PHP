@@ -1,4 +1,5 @@
 # user-management-PHP (No framework)
+Dùng PHP thuần code theo mô hình MVC
 -  Admin
 	- Login/Logout
 	- CURD
